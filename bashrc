@@ -1,22 +1,38 @@
-#
-# ~/.bashrc
-#
+# .bashrc
 
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
 
-alias ls='ls --color=auto'
-PS1='[\u@\h \W]\$ '
-export SUDO_ASKPASS=/usr/bin/qt4-ssh-askpass
-export EDITOR="vy"
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+    for rc in ~/.bashrc.d/*; do
+        if [ -f "$rc" ]; then
+            . "$rc"
+        fi
+    done
+fi
+unset rc
+# export NO_COLOR=1
+# export PS1='\u@\h=:\w\$'
+export TERM=dumb
+export EDITOR="escs"
+export VISUAL="escs"
+
+export SUDO_ASKPASS=/usr/libexec/openssh/ssh-askpass
+# export SSH_ASKPASS=/usr/libexec/openssh/ssh-askpass
+
 export PATH=$PATH:~/bin
-export SSH_ASKPASS=/usr/bin/qt4-ssh-askpass
-
-PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
-
-PATH="/usr/local/heroku/bin:$PATH"
-export GOPATH=$HOME/.go
-export PATH=$PATH:$GOPATH/bin
 
 function build_regex() {
     local str=$1
@@ -36,26 +52,3 @@ function l() {
     str=$(build_regex "$@")
     ack "$str" $PWD
 }
-
-# function git2() {
-    # sudo iptables -A OUTPUT -t filter -p tcp --dport 22 -j ACCEPT;
-    # `which git` $@;
-    # sudo iptables -D OUTPUT -t filter -p tcp --dport 22 -j ACCEPT;
-# }
-# 
-# function ssh2() {
-    # sudo iptables -A OUTPUT -t filter -p tcp --dport 22 -j ACCEPT;
-    # `which ssh` $@;
-    # sudo iptables -D OUTPUT -t filter -p tcp --dport 22 -j ACCEPT;
-# }
-# 
-# export -f git2
-# export -f ssh2
-# assuming there is a DROP policy in the chains
-# for connections on port 22.
-
-
-
-
-
-
